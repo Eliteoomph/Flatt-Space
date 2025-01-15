@@ -1,26 +1,26 @@
-import { canvas, ctx } from "./canvas.js";
 import { POIs, poiColors } from "./objectData.js";
-import { vehicle } from "./vehicle.js";
+import { canvas, ctx } from "./canvas.js";
+import { vehicle } from "./vehicle.js"; // Ensure vehicle is imported
 
-export function drawObjects() {
-    POIs.forEach((poi) => {
-        const dx = poi.x - vehicle.x; // X offset from vehicle
-        const dy = poi.y - vehicle.y; // Y offset from vehicle
+export function drawObjects() { // Match your existing naming convention
+  POIs.forEach((poi) => {
+    const screenX = canvas.width / 2 + (poi.x - vehicle.x);
+    const screenY = canvas.height / 2 + (poi.y - vehicle.y);
 
-        // Calculate relative position for the object on the canvas
-        const relativeX = canvas.width / 2 + dx; // Center canvas + offset
-        const relativeY = canvas.height / 2 + dy;
+    if (
+      screenX >= 0 &&
+      screenX <= canvas.width &&
+      screenY >= 0 &&
+      screenY <= canvas.height
+    ) {
+      ctx.fillStyle = poiColors[poi.type] || "white";
+      ctx.beginPath();
+      ctx.arc(screenX, screenY, 6, 0, Math.PI * 2);
+      ctx.fill();
 
-        // Draw the object as a dot
-        ctx.fillStyle = poiColors[poi.type] || "yellow";
-        ctx.beginPath();
-        ctx.arc(relativeX, relativeY, 5, 0, Math.PI * 2); // Small circle
-        ctx.fill();
-
-        // Display object name and coordinates
-        ctx.font = "12px Arial";
-        ctx.fillStyle = "white";
-        ctx.fillText(`${poi.name}`, relativeX + 10, relativeY - 10);
-        ctx.fillText(`(${poi.x.toFixed(0)}, ${poi.y.toFixed(0)})`, relativeX + 10, relativeY + 5);
-    });
+      ctx.fillStyle = "white";
+      ctx.font = "12px Arial";
+      ctx.fillText(poi.name, screenX + 10, screenY - 10);
+    }
+  });
 }
