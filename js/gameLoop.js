@@ -3,6 +3,7 @@ import { drawVehicle } from "./vehicleRenderer.js";
 import { drawLasers, updateLasers } from "./weapons.js";
 import { drawGrid, drawStars, drawMiniMap } from "./canvas.js";
 import { drawCoordinates } from "./coordinates.js";
+import { drawPOIs } from "./objectDrawer.js"; // Ensure POIs are drawn properly
 
 // Initialize canvas and context
 const canvas = document.getElementById("gameCanvas");
