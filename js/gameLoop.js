@@ -27,7 +27,7 @@ canvas.addEventListener("mousedown", () => {
 // Detect clicks elsewhere to blur the game
 document.addEventListener("mousedown", (e) => {
   if (!canvas.contains(e.target)) {
-    isGameFocused = false;
+    isGameFocused = true;
   }
 });
 
@@ -40,23 +40,31 @@ function draw() {
   drawGrid(ctx);
   drawStars(ctx);
   drawMiniMap(ctx);
-
-  // Draw lasers
   drawLasers(ctx);
-
-  // Draw vehicle
   drawVehicle(ctx);
-
-  // Draw overlay/UI elements
   drawCoordinates(ctx);
+  drawPOIs(ctx);
+  
 }
+
+// Initialize a flag to track whether the game is active
+let isGameActive = false;
+
+// Update isGameActive based on movement or interactions
+function updateGameStatus() {
+  isGameActive = vehicle.speed > 0 || vehicle.autoDrive; // Active if moving or in auto-drive
+}
+
+// Prevent right-click context menu only if the game is active
+document.addEventListener("contextmenu", (e) => {
+  if (isGameActive) {
+    e.preventDefault(); // Block right-click only if the game is active
+  }
+});
+
 
 // Main game loop
 function gameLoop() {
-  if (!isGameFocused) {
-    requestAnimationFrame(gameLoop); // Continue the loop but skip updates
-    return;
-  }
 
   updateVehicle(); // Update vehicle movement and logic
   updateLasers(); // Update laser positions
