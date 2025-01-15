@@ -1,5 +1,4 @@
 import { vehicle } from "./vehicle.js";
-import { playShootingSound } from "./audio.js";
 
 let lasers = []; // Array to hold laser shots
 
@@ -11,7 +10,6 @@ export function fireWeapon() {
     angle: vehicle.angle,
     lifetime: 100, // Frames before disappearing
   });
-  playShootingSound(); // Play sound effect
 }
 
 // Update laser positions and filter expired lasers

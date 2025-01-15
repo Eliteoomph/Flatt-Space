@@ -1,6 +1,6 @@
 import { updateVehicle } from "./vehicle.js";
 import { drawVehicle } from "./vehicleRenderer.js";
-import { fireWeapon, updateLasers, drawLasers } from "./weapons.js";
+import { drawLasers, updateLasers } from "./weapons.js";
 import { drawGrid, drawStars, drawMiniMap } from "./canvas.js";
 import { drawCoordinates } from "./coordinates.js";
 
@@ -16,10 +16,18 @@ function resizeCanvas() {
 resizeCanvas();
 window.addEventListener("resize", resizeCanvas);
 
-// Fire weapon on spacebar press
-document.addEventListener("keydown", (e) => {
-  if (e.code === "Space") {
-    fireWeapon(); // Trigger laser firing
+// Track whether the game canvas is focused
+let isGameFocused = true;
+
+// Detect clicks on the canvas to focus the game
+canvas.addEventListener("mousedown", () => {
+  isGameFocused = true;
+});
+
+// Detect clicks elsewhere to blur the game
+document.addEventListener("mousedown", (e) => {
+  if (!canvas.contains(e.target)) {
+    isGameFocused = false;
   }
 });
 
@@ -33,9 +41,8 @@ function draw() {
   drawStars(ctx);
   drawMiniMap(ctx);
 
-  // Draw lasers (fired shots)
-  updateLasers(); // Update laser positions
-  drawLasers(ctx); // Draw laser effects
+  // Draw lasers
+  drawLasers(ctx);
 
   // Draw vehicle
   drawVehicle(ctx);
@@ -46,7 +53,13 @@ function draw() {
 
 // Main game loop
 function gameLoop() {
+  if (!isGameFocused) {
+    requestAnimationFrame(gameLoop); // Continue the loop but skip updates
+    return;
+  }
+
   updateVehicle(); // Update vehicle movement and logic
+  updateLasers(); // Update laser positions
   draw(); // Draw all elements
   requestAnimationFrame(gameLoop); // Loop
 }

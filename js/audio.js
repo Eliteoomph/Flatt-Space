@@ -25,7 +25,7 @@ function playMusic() {
   }
 }
 
-// Function to pause music (added for toggle functionality)
+// Function to pause music
 function pauseMusic() {
   if (musicPlaying) {
     backgroundMusic.pause();
